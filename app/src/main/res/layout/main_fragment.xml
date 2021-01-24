@@ -2,10 +2,80 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+    android:background="@color/ic_application_background"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="parent"
+    tools:context=".ui.fragments.MainFragment">
 
 
+    <Button
+        android:id="@+id/btnRequestLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#119E17"
+        android:onClick="onClickRequestLocation"
+        android:text="@string/lblBtnRequestLocation"
+        android:textAllCaps="false"
+        android:textColor="#00BCD4"
+        android:textColorHighlight="#FFFFFF"
+        app:icon="@android:drawable/ic_menu_mylocation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRequestBloutoothAccess"
+        app:layout_constraintVertical_bias="0.011"
+        app:rippleColor="#FFFFFF"
+        tools:ignore="OnClick" />
+
+    <Button
+        android:id="@+id/btnRequestBloutoothAccess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#119E17"
+        android:onClick="onChickRequestBluetoothAccess"
+        android:text="@string/lblBtnRequestBluetooth"
+        android:textAllCaps="false"
+        android:textColor="#00BCD4"
+        android:textColorHighlight="#FFFFFF"
+        app:icon="@android:drawable/stat_sys_data_bluetooth"
+        app:layout_constraintEnd_toEndOf="@+id/btnRequestLocation"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/btnRequestLocation"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:rippleColor="#FFFFFF"
+        tools:ignore="OnClick" />
+
+    <TextView
+        android:id="@+id/txtPermissions"
+        android:layout_width="367dp"
+        android:layout_height="162dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/txtPermissions"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#00BCD4"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="258dp"
+        android:layout_height="247dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/txtPermissionsRequired"
+        android:src="@mipmap/ic_mixmd360"
+        app:layout_constraintEnd_toEndOf="@+id/btnRequestBloutoothAccess"
+        app:layout_constraintStart_toStartOf="@+id/btnRequestBloutoothAccess"
+        app:layout_constraintTop_toBottomOf="@+id/txtPermissions" />
 </androidx.constraintlayout.widget.ConstraintLayout>

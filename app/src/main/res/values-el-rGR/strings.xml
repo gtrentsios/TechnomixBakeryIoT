@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TechnomixBakeryIoT</string>
+    <string name="permissionTitleLocation">Απαιτείται αδεία πρόσβασης στην τοποθεσία της συσκευής</string>
+    <string name="permissionMessageLocation">Η εφαρμογή για να συνδεθεί με τις συσκευές μας χρησιμοποίει το Bluetooth. Με τη χρήση του Bluetooth η εφσρμογή έχει την δυνατότητα να αντοπίζει την τοποθεσία που βρίσκεσται, ακόμα και αν εκτελείται στο παρασκήνιο. Για το λόγο αυτό απαιτείτε η αδειά σας, για κανένα λόγο δεν θα εντοπίσουμε και θα κοινοποιήσουμε την θέση σας .</string>
+    <string name="permissionTitleBluetooth">Απαιτείται αδεία πρόσβασης στο Blouetooth της συσκευής</string>
+    <string name="permissionMessageBluetooth">Η εφαρμογή συνδέεται με τις συσκευές μας μέσο του bluetooth για να στείλει και να διαβάσει δεομένα. Για αυτό απαιτέιται η αδειά σας.</string>
+    <string name="permissionGrantedLocation">Δόθηκε άδεια εντοπισμού τοποθεσίας </string>
+    <string name="permissionGrantedBluetooth">Δόθηκε άδεια χρήσης Bluetooth </string>
+    <string name="lblBtnRequestBluetooth">Άδεια χρήσης Bluetooth</string>
+    <string name="lblBtnRequestLocation">Άδεια Εντοπισμού Θέσης</string>
+    <string name="txtPermissions">Η εφαρμογή για να συνδέεται με τις συσκευές μας μέσο του Bluetooth για να στείλει και να διαβάσει δεδομένα. Γι’ αυτό το λόγο απαιτείται η άδεια χρήσης του Blouetooth της συσκευής σας. Επίσης η εφαρμογή δε θα εντοπίσει την τοποθεσία σας ποτέ. Επειδή  όμως  οι εφαρμογές με  πρόσβαση στο Bluetooth μπορούν να εντοπίζουν την τοποθεσία της συσκευής σας. Απαιτείται η άδεια πρόσβασης σε αυτήν.  </string>
+    <string name="txtPermissionsRequired">Απαιτούντε δικαιώματα</string>
+    <string name="appName">Technomix Bakery IOT</string>
+</resources>

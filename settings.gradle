@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name = "TechnomixBakeryIoT"
+include ':ble'
+project(':ble').projectDir = file('../Android-BLE-Library/ble')

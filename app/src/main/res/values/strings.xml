@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">TechnomixBakeryIoT</string>
+    <string name="permissionTitleLocation">Location access required</string>
+    <string name="permissionMessageLocation">Application connects to our devices with bluetooth. By using bluetooth application is able to know your location even if is running in background for this permission is required. We will never get and share your location.</string>
+    <string name="permissionTitleBluetooth">Access to Bluetooth of your device is required</string>
+    <string name="permissionMessageBluetooth">By using Bluetooth application, connects to our devices in order to send and read data. For that this permission is requred</string>
+    <string name="permissionGrantedLocation">Locations Permission granted</string>
+    <string name="permissionGrantedBluetooth">Bluetooth Permission granted </string>
+    <string name="lblBtnRequestBluetooth">Bluetooth Permissions</string>
+    <string name="lblBtnRequestLocation">Location Permissions</string>
+    <string name="txtPermissions">This application connects to our devices with Bluetooth to send and read data. We will never track your location. But applications with access to your device Bluetooth, can track your location even if are running in background.  For that reasons we request Bluetooth and location permissions.</string>
+    <string name="txtPermissionsRequired">Required Permissions</string>
+    <string name="appName">Technomix Bakery IOT</string>
+    <string name="ConnectedDevice">Device</string>
 </resources>
