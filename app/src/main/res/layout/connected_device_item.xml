@@ -10,27 +10,31 @@
     app:cardBackgroundColor="@color/ic_application_background"
     android:layout_gravity="start"
     app:cardUseCompatPadding="true"
-    android:clickable="true"   >
+    android:clickable="true"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_gravity="center"
         android:paddingStart="20dp"
-        android:paddingEnd="40dp">
+        android:paddingEnd="20dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_connected_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_mixmd360"
-          />
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="1dp"
+            android:src="@drawable/ic_mixmd360_round" />
+
 
         <LinearLayout
             android:id="@+id/layout_device"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:layout_marginEnd="36dp"
             android:layout_toEndOf="@id/img_connected_device"
             android:orientation="vertical">
 
@@ -55,5 +59,20 @@
                 android:textColor="@color/white" />
 
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/rssi"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="0dp"
+            app:srcCompat="@drawable/ic_signal_bar"
+            tools:src="@drawable/ic_signal_3_bar" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

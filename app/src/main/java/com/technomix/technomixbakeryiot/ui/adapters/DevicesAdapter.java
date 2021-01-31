@@ -1,71 +1,119 @@
+/*
+ * Copyright (c) 2018, Nordic Semiconductor
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package com.technomix.technomixbakeryiot.ui.adapters;
 
-import android.app.Activity;
-import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.technomix.technomixbakeryiot.R;
-import com.technomix.technomixbakeryiot.data.ConnectedDevices;
-import com.technomix.technomixbakeryiot.ui.activities.MainActivity;
-import com.technomix.technomixbakeryiot.ui.fragments.Devices;
-
-import java.util.ArrayList;
+import com.technomix.technomixbakeryiot.ui.activities.ScannerActivity;
+import com.technomix.technomixbakeryiot.ui.models.DevicesLiveData;
 
 
-public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesViewHolder> {
-    private final ArrayList<ConnectedDevices> mDevices = new ArrayList<ConnectedDevices>();
+public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHolder> {
+	private List<DiscoveredBluetoothDevice> devices;
+	private OnItemClickListener onItemClickListener;
+
+	@FunctionalInterface
+	public interface OnItemClickListener {
+		void onItemClick(@NonNull final DiscoveredBluetoothDevice device);
+	}
+
+	public void setOnItemClickListener(final OnItemClickListener listener) {
+		onItemClickListener = listener;
+	}
+
+	public DevicesAdapter(@NonNull final ScannerActivity activity,
+						  @NonNull final DevicesLiveData devicesLiveData) {
 
 
-    public static class DevicesViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewName;
-        TextView textViewAddress;
-        ImageView imageViewIcon;
-        public DevicesViewHolder(View itemView) {
-            super(itemView);
-            this.textViewName = (TextView) itemView.findViewById(R.id.lbl_device_name);
-            this.textViewAddress = (TextView) itemView.findViewById(R.id.lbl_device_address);
-            this.imageViewIcon = (ImageView) itemView.findViewById(R.id.img_connected_device);
-        }
-    }
-    @Override
-    public DevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.connected_device_item, parent, false);
-        DevicesViewHolder devicesViewHolder = new DevicesViewHolder(view);
-        view.setOnClickListener(Devices.devicesItemListener);
-        return devicesViewHolder;
-    }
+		setHasStableIds(true);
+		devicesLiveData.observe(activity, newDevices -> {
+			final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+					new DeviceDiffCallback(devices, newDevices), false);
+			devices = newDevices;
+			result.dispatchUpdatesTo(this);
+		});
+	}
+	@NonNull
+	@Override
+	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+		final View layoutView = LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.device_item, parent, false);
+		return new ViewHolder(layoutView);
+	}
 
-    @Override
-    public void onBindViewHolder(@NonNull DevicesViewHolder holder, int position) {
+	@Override
+	public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+		final DiscoveredBluetoothDevice device = devices.get(position);
+		final String deviceName = device.getName();
 
-        TextView textViewName = holder.textViewName;
-        TextView textViewVersion = holder.textViewAddress;
-        ImageView imageView = holder.imageViewIcon;
+		if (!TextUtils.isEmpty(deviceName))
+			holder.deviceName.setText(deviceName);
+		else
+			holder.deviceName.setText(R.string.unknown_device);
+		holder.deviceAddress.setText(device.getAddress());
+		final int rssiPercent = (int) (100.0f * (127.0f + device.getRssi()) / (127.0f + 20.0f));
+		holder.rssi.setImageLevel(rssiPercent);
+	}
 
-        textViewName.setText(mDevices.get(position).getDeviceName());
-        textViewVersion.setText(mDevices.get(position).getDeviceAddress());
-        //imageView.setImageResource(mDevices.get(position).getImage());
-    }
+	@Override
+	public long getItemId(final int position) {
+		return devices.get(position).hashCode();
+	}
 
-    @Override
-    public int getItemCount() {
-        return mDevices.size();
-    }
-    public void addDevice(ConnectedDevices device){
-        mDevices.add(device);
-    }
-    public ConnectedDevices getClickedDevice(int position){
-        return mDevices.get(position);
-    }
+	@Override
+	public int getItemCount() {
+		return devices != null ? devices.size() : 0;
+	}
 
+	public boolean isEmpty() {
+		return getItemCount() == 0;
+	}
+
+	final class ViewHolder extends RecyclerView.ViewHolder {
+		@BindView(R.id.device_address) TextView deviceAddress;
+		@BindView(R.id.device_name) TextView deviceName;
+		@BindView(R.id.rssi) ImageView rssi;
+
+		private ViewHolder(@NonNull final View view) {
+			super(view);
+			ButterKnife.bind(this, view);
+
+			view.findViewById(R.id.device_container).setOnClickListener(v -> {
+				if (onItemClickListener != null) {
+					onItemClickListener.onItemClick(devices.get(getAdapterPosition()));
+				}
+			});
+		}
+	}
 }

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnRequestPermissi
     protected void onResume() {
         super.onResume();
         if (checkLocationPermissions() &&  checkBlueToothPermissions()) {
-            mNavController.navigate(R.id.devicesConnectedFragment);
+            mNavController.navigate(R.id.action_mainFragment_to_scannerActivity);
         } else {
             final Button buttonRequestBluetoothAccess = findViewById(R.id.btnRequestBloutoothAccess);
             buttonRequestBluetoothAccess.setVisibility(checkBlueToothPermissions()?View.GONE:View.VISIBLE);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnRequestPermissi
     }
     void checkAndNavigate(){
         if (checkLocationPermissions() &&  checkBlueToothPermissions()) {
-            mNavController.navigate(R.id.devicesConnectedFragment);
+            mNavController.navigate(R.id.action_mainFragment_to_scannerActivity);
         }
     }
 }
