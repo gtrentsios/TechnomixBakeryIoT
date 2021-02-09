@@ -32,7 +32,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.technomix.technomixbakeryiot.R;
 
 import butterknife.BindView;
@@ -48,14 +47,13 @@ public class MD360DetailsActivity extends AppCompatActivity {
 
 	private DeviceViewModel viewModel;
 
-	@BindView(R.id.led_switch)
-    SwitchMaterial led;
-	@BindView(R.id.button_state) TextView buttonState;
+	@BindView(R.id.device_item_model_name)  TextView temperature;
+	@BindView(R.id.device_item_temperature) TextView modelName;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_blinky);
+		setContentView(R.layout.activity_md360);
 		ButterKnife.bind(this);
 
 		final Intent intent = getIntent();
@@ -74,17 +72,17 @@ public class MD360DetailsActivity extends AppCompatActivity {
 		viewModel.connect(device);
 
 		// Set up views.
-		final TextView ledState = findViewById(R.id.led_state);
-		final LinearLayout progressContainer = findViewById(R.id.progress_container);
-		final TextView connectionState = findViewById(R.id.connection_state);
-		final View content = findViewById(R.id.device_container);
+		final TextView ledState = findViewById(R.id.device_item_temperature);
+
+		final TextView connectionState = findViewById(R.id.device_item_img_connected_status);
+		final View content = findViewById(R.id.device_item_cardView);
 		final View notSupported = findViewById(R.id.not_supported);
 
-		led.setOnCheckedChangeListener((buttonView, isChecked) -> viewModel.setLedState(isChecked));
+
 		viewModel.getConnectionState().observe(this, state -> {
 			switch (state.getState()) {
 				case CONNECTING:
-					progressContainer.setVisibility(View.VISIBLE);
+
 					notSupported.setVisibility(View.GONE);
 					connectionState.setText(R.string.state_connecting);
 					break;
@@ -92,7 +90,7 @@ public class MD360DetailsActivity extends AppCompatActivity {
 					connectionState.setText(R.string.state_initializing);
 					break;
 				case READY:
-					progressContainer.setVisibility(View.GONE);
+
 					content.setVisibility(View.VISIBLE);
 					onConnectionStateChanged(true);
 					break;
@@ -100,7 +98,7 @@ public class MD360DetailsActivity extends AppCompatActivity {
 					if (state instanceof ConnectionState.Disconnected) {
 						final ConnectionState.Disconnected stateWithReason = (ConnectionState.Disconnected) state;
 						if (stateWithReason.isNotSupported()) {
-							progressContainer.setVisibility(View.GONE);
+
 							notSupported.setVisibility(View.VISIBLE);
 						}
 					}
@@ -110,13 +108,11 @@ public class MD360DetailsActivity extends AppCompatActivity {
 					break;
 			}
 		});
-		viewModel.getLedState().observe(this, isOn -> {
-			ledState.setText(isOn ? R.string.turn_on : R.string.turn_off);
-			led.setChecked(isOn);
+		viewModel.getTemperature().observe(this, temperature -> {
+			ledState.setText(temperature.toString());
 		});
-		viewModel.getButtonState().observe(this,
-				pressed -> buttonState.setText(pressed ?
-						R.string.button_pressed : R.string.button_released));
+		viewModel.getModelName().observe(this,
+				modelName -> this.modelName.setText(modelName.toString()));
 	}
 
 	@OnClick(R.id.action_clear_cache)
@@ -125,10 +121,10 @@ public class MD360DetailsActivity extends AppCompatActivity {
 	}
 
 	private void onConnectionStateChanged(final boolean connected) {
-		led.setEnabled(connected);
+		temperature.setEnabled(connected);
 		if (!connected) {
-			led.setChecked(false);
-			buttonState.setText(R.string.button_unknown);
+			temperature.setText("0");
+			modelName.setText(R.string.button_unknown);
 		}
 	}
 }

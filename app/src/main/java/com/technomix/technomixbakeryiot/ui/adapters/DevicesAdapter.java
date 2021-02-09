@@ -29,33 +29,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.List;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.technomix.technomixbakeryiot.R;
 import com.technomix.technomixbakeryiot.ui.activities.ScannerActivity;
 import com.technomix.technomixbakeryiot.ui.models.DevicesLiveData;
+import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import no.nordicsemi.android.log.LogContract;
+import no.nordicsemi.android.log.LogSession;
+import no.nordicsemi.android.log.Logger;
 
 
-public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHolder> {
+public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHolder>  {
 	private List<DiscoveredBluetoothDevice> devices;
 	private OnItemClickListener onItemClickListener;
 
-	@FunctionalInterface
-	public interface OnItemClickListener {
-		void onItemClick(@NonNull final DiscoveredBluetoothDevice device);
-	}
-
-	public void setOnItemClickListener(final OnItemClickListener listener) {
-		onItemClickListener = listener;
-	}
-
 	public DevicesAdapter(@NonNull final ScannerActivity activity,
 						  @NonNull final DevicesLiveData devicesLiveData) {
-
-
 		setHasStableIds(true);
 		devicesLiveData.observe(activity, newDevices -> {
 			final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
@@ -64,28 +58,36 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 			result.dispatchUpdatesTo(this);
 		});
 	}
+	@FunctionalInterface
+	public interface OnItemClickListener {
+		void onItemClick(@NonNull final DiscoveredBluetoothDevice device);
+	}
+
+	public void setOnItemClickListener(final OnItemClickListener listener) {
+		onItemClickListener = listener;
+	}
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
 		final View layoutView = LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.device_item, parent, false);
+
 		return new ViewHolder(layoutView);
 	}
-
 	@Override
 	public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 		final DiscoveredBluetoothDevice device = devices.get(position);
-		final String deviceName = device.getName();
-
-		if (!TextUtils.isEmpty(deviceName))
-			holder.deviceName.setText(deviceName);
+		final LiveData<String> deviceName =  device.getModelName();
+		if (!TextUtils.isEmpty(deviceName.getValue()))
+			holder.modelName.setText(deviceName.getValue());
 		else
-			holder.deviceName.setText(R.string.unknown_device);
-		holder.deviceAddress.setText(device.getAddress());
+			holder.modelName.setText(R.string.unknown_device);
+		//holder.deviceAddress.setText(device.getAddress());
 		final int rssiPercent = (int) (100.0f * (127.0f + device.getRssi()) / (127.0f + 20.0f));
 		holder.rssi.setImageLevel(rssiPercent);
+		final Float temperature =  device.getTemperature().getValue();
+		holder.temperature.setText("Temperature :" + temperature);
 	}
-
 	@Override
 	public long getItemId(final int position) {
 		return devices.get(position).hashCode();
@@ -100,20 +102,36 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 		return getItemCount() == 0;
 	}
 
+	private LogSession logSession;
+
+	public void log(final int priority, @NonNull final String message) {
+		// The priority is a Log.X constant, while the Logger accepts it's log levels.
+		Logger.log(logSession, LogContract.Log.Level.fromPriority(priority), message);
+	}
+	public void setLogger(@Nullable final LogSession session) {
+		logSession = session;
+	}
+
 	final class ViewHolder extends RecyclerView.ViewHolder {
-		@BindView(R.id.device_address) TextView deviceAddress;
-		@BindView(R.id.device_name) TextView deviceName;
-		@BindView(R.id.rssi) ImageView rssi;
+		@BindView(R.id.device_item_model_name) TextView modelName;
+		@BindView(R.id.device_item_temperature) TextView temperature;
+		@BindView(R.id.device_item_img_connected_status) ImageView connectedStatus;
+		@BindView(R.id.device_item_img_signal_level) ImageView rssi;
 
 		private ViewHolder(@NonNull final View view) {
 			super(view);
 			ButterKnife.bind(this, view);
 
-			view.findViewById(R.id.device_container).setOnClickListener(v -> {
+			final LogSession logSession = Logger
+					.newSession(view.getContext(), null, null,null);
+			setLogger(logSession);
+			view.findViewById(R.id.device_item_cardView).setOnClickListener(v -> {
 				if (onItemClickListener != null) {
 					onItemClickListener.onItemClick(devices.get(getAdapterPosition()));
 				}
 			});
 		}
 	}
+
+
 }

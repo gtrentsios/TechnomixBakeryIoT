@@ -32,8 +32,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:fitsSystemWindows="true"
-	tools:context=".SplashScreenActivity"
-	tools:ignore="ContentDescription">
+	tools:context="com.technomix.technomixbakeryiot.ui.activities.SplashScreenActivity"
+	tools:ignore="ContentDescription"
+	android:theme="@style/Theme.TechnomixBakeryIoT">
 
 	<androidx.appcompat.widget.AppCompatImageView
 		android:layout_width="match_parent"
@@ -41,6 +42,6 @@
 		android:fitsSystemWindows="true"
 		android:scaleType="centerCrop"
 		android:background="@color/colorNordicLogoTop"
-		app:srcCompat="@drawable/nordic_logo"/>
+		app:srcCompat="@drawable/ic_application"/>
 	
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

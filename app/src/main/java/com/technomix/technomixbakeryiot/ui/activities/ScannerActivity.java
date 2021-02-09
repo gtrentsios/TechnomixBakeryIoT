@@ -32,7 +32,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,10 +41,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.google.android.material.appbar.MaterialToolbar;
 import com.technomix.technomixbakeryiot.R;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -133,8 +130,8 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
     @Override
     public void onItemClick(@NonNull final DiscoveredBluetoothDevice device) {
         final Intent controlBlinkIntent = new Intent(this, MD360DetailsActivity.class);
-        controlBlinkIntent.putExtra(MD360DetailsActivity.EXTRA_DEVICE, device);
-        startActivity(controlBlinkIntent);
+        //controlBlinkIntent.putExtra(MD360DetailsActivity.EXTRA_DEVICE, device);
+        //startActivity(controlBlinkIntent);
     }
 
     @Override

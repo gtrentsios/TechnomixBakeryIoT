@@ -26,8 +26,9 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".ScannerActivity"
-	tools:ignore="ContentDescription">
+	tools:context=".ui.activities.ScannerActivity"
+	tools:ignore="ContentDescription"
+	android:theme="@style/AppTheme.NoActionBar">
 
 	<com.google.android.material.appbar.AppBarLayout
 		android:id="@+id/appbar_layout"

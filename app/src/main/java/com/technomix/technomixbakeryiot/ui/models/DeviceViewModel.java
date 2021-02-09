@@ -24,39 +24,37 @@ package com.technomix.technomixbakeryiot.ui.models;
 
 import android.app.Application;
 import android.bluetooth.BluetoothDevice;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import no.nordicsemi.android.ble.livedata.state.ConnectionState;
 import com.technomix.technomixbakeryiot.ui.adapters.DiscoveredBluetoothDevice;
-import com.technomix.technomixbakeryiot.profile.BlinkyManager;
+import com.technomix.technomixbakeryiot.profile.MD360Manager;
 import no.nordicsemi.android.log.Logger;
 import no.nordicsemi.android.log.LogSession;
 
 
 public class DeviceViewModel extends AndroidViewModel {
-	private final BlinkyManager blinkyManager;
+	private final MD360Manager md360Manager;
 	private BluetoothDevice device;
 
 	public DeviceViewModel(@NonNull final Application application) {
 		super(application);
 
 		// Initialize the manager.
-		blinkyManager = new BlinkyManager(getApplication());
+		md360Manager = new MD360Manager(getApplication());
 	}
 
 	public LiveData<ConnectionState> getConnectionState() {
-		return blinkyManager.getState();
+		return md360Manager.getState();
 	}
 
-	public LiveData<Boolean> getButtonState() {
-		return blinkyManager.getButtonState();
+	public LiveData<String> getModelName() {
+		return md360Manager.getModelName();
 	}
 
-	public LiveData<Boolean> getLedState() {
-		return blinkyManager.getLedState();
+	public LiveData<Float> getTemperature() {
+		return md360Manager.getTemperature();
 	}
 
 	/**
@@ -70,7 +68,7 @@ public class DeviceViewModel extends AndroidViewModel {
 			device = target.getDevice();
 			final LogSession logSession = Logger
 					.newSession(getApplication(), null, target.getAddress(), target.getName());
-			blinkyManager.setLogger(logSession);
+			md360Manager.setLogger(logSession);
 			reconnect();
 		}
 	}
@@ -82,7 +80,7 @@ public class DeviceViewModel extends AndroidViewModel {
 	 */
 	public void reconnect() {
 		if (device != null) {
-			blinkyManager.connect(device)
+			md360Manager.connect(device)
 					.retry(3, 100)
 					.useAutoConnect(false)
 					.enqueue();
@@ -94,22 +92,22 @@ public class DeviceViewModel extends AndroidViewModel {
 	 */
 	private void disconnect() {
 		device = null;
-		blinkyManager.disconnect().enqueue();
+		md360Manager.disconnect().enqueue();
 	}
 
 	/**
 	 * Sends a command to turn ON or OFF the LED on the nRF5 DK.
 	 *
-	 * @param on true to turn the LED on, false to turn it OFF.
+	 * @param temp true to turn the LED on, false to turn it OFF.
 	 */
-	public void setLedState(final boolean on) {
-		blinkyManager.turnLed(on);
+	public void setTempChanged(final String temp) {
+		md360Manager.tempChanged(temp);
 	}
 
 	@Override
 	protected void onCleared() {
 		super.onCleared();
-		if (blinkyManager.isConnected()) {
+		if (md360Manager.isConnected()) {
 			disconnect();
 		}
 	}

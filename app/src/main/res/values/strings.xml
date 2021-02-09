@@ -52,5 +52,6 @@
 
     <string name="state_connecting">Connecting…</string>
     <string name="state_initializing">Initializing…</string>
+    <string name="temperature">Temperature</string>
 
 </resources>

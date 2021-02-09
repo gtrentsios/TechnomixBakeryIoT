@@ -14,11 +14,30 @@
         android:roundIcon="@drawable/ic_application_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TechnomixBakeryIoT">
-        <activity android:name=".ui.activities.MainActivity">
+        <activity
+            android:name=".ui.activities.SplashScreenActivity"
+            android:theme="@style/AppTheme.SplashScreen"
+            android:noHistory="true"
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.ScannerActivity"
+            android:icon="@drawable/ic_blinky_feature"
+            android:label="@string/feature_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="no.nordicsemi.android.nrftoolbox.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.MD360DetailsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.ScannerActivity">
         </activity>
     </application>
 

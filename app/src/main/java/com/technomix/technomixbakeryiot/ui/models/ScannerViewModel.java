@@ -37,6 +37,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
+import com.technomix.technomixbakeryiot.profile.MD360Manager;
 import com.technomix.technomixbakeryiot.utils.Utils;
 import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
 import no.nordicsemi.android.support.v18.scanner.ScanCallback;
@@ -76,7 +77,9 @@ public class ScannerViewModel extends AndroidViewModel {
 		scannerStateLiveData = new ScannerStateLiveData(Utils.isBleEnabled(),
 				Utils.isLocationEnabled(application));
 		devicesLiveData = new DevicesLiveData(filterUuidRequired, filerNearbyOnly);
+		devicesLiveData.setApplication(application);
 		registerBroadcastReceivers(application);
+
 	}
 
 	@Override
@@ -100,7 +103,7 @@ public class ScannerViewModel extends AndroidViewModel {
 	/**
 	 * Forces the observers to be notified. This method is used to refresh the screen after the
 	 * location permission has been granted. In result, the observer in
-	 * {@link no.nordicsemi.android.blinky.ScannerActivity} will try to start scanning.
+	 * {@link com.technomix.technomixbakeryiot.ui.activities.ScannerActivity} will try to start scanning.
 	 */
 	public void refresh() {
 		scannerStateLiveData.refresh();
